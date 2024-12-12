@@ -76,39 +76,45 @@ app.delete('/api/person/:id', (request, response) => {
 
 
 
-app.post('/api/person', (request, response) => {
-  const body = request.body
+app.post('/api/person', (request, response, next) => {
+  const body = request.body;
 
 
   if (!body.number || !body.name) {
     return response.status(400).json({ error: 'content missing' });
   }
 
-  Person.findOne({name: body.name})
+
+  Person.findOne({ name: body.name })
     .then(existingPerson => {
-      if(existingPerson) {
+      if (existingPerson) {
+
         existingPerson.number = body.number;
 
 
-        existingPerson.save()
+        return existingPerson.save()
           .then(updatedPerson => {
-            response.json(updatedPerson)
+            response.json(updatedPerson);
           })
-          .catch(error => next(error))
-      }
-      else {
-        const person = new Person ({
+          .catch(error => next(error));
+      } else {
+
+        const person = new Person({
           name: body.name,
-          number: body.number
-        })
-        person.save().then(savedPerson => {
-          response.json(savedPerson)
-      
-        })
-        .catch(error => next(error))
+          number: body.number,
+        });
+
+
+        return person.save()
+          .then(savedPerson => {
+            response.json(savedPerson); 
+          })
+          .catch(error => next(error)); 
       }
     })
-}) 
+    .catch(error => next(error)); 
+});
+
 
 
 //Not used anymore
