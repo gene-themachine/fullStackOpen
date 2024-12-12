@@ -79,7 +79,6 @@ app.delete('/api/person/:id', (request, response) => {
 app.post('/api/person', (request, response, next) => {
   const body = request.body;
 
-
   if (!body.number || !body.name) {
     return response.status(400).json({ error: 'content missing' });
   }
