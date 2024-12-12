@@ -87,35 +87,28 @@ app.post('/api/person', (request, response, next) => {
     number: body.number,
   });
 
-
-  return person.save()
+  person.save()
     .then(savedPerson => {
       response.json(savedPerson); 
     })
     .catch(error => next(error)); 
-
 });
+
 
 app.put('/api/person/:id', (request, response, next) => {
-  const { name, number } = request.body; 
+  const body = request.body
 
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
 
-  Person.findByIdAndUpdate(
-    request.params.id, 
-    { name, number },  
-    { new: true, runValidators: true, context: 'query' } 
-  )
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
     .then(updatedPerson => {
-      if (updatedPerson) {
-
-        response.json(updatedPerson);
-      } else {
-
-        response.status(404).send({ error: 'Person not found' });
-      }
+      response.json(updatedPerson)
     })
-    .catch(error => next(error)); 
-});
+    .catch(error => next(error))
+})
 
 
 //Not used anymore
