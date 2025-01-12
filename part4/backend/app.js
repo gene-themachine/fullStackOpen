@@ -9,10 +9,6 @@ const loginRouter = require('./controllers/login')
 const middleware = require('./utils/middleware'); // Path to the middleware file
 
 
-
-
-
-
 mongoose.set('strictQuery', false)
 
 mongoose.connect(config.MONGODB_URI)
